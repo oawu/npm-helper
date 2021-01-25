@@ -1,0 +1,30 @@
+{
+  "name": "@oawu/helper",
+  "version": "1.0.2",
+  "description": "🤝 一些常用的小工具",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comdan66/node-Helper.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "OA Wu",
+    "email": "comdan66@gmail.com",
+    "url": "https://www.ioa.tw"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comdan66/node-Helper/issues"
+  },
+  "homepage": "https://github.com/comdan66/node-Helper#readme",
+  "dependencies": {
+    "@oawu/cli-progress": "^1.0.9",
+    "@oawu/xterm": "^1.0.4",
+    "aws-sdk": "^2.831.0",
+    "mime": "^2.5.0"
+  }
+}
