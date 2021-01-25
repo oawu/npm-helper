@@ -1,6 +1,6 @@
 # OA's Node Helper
 
-🤝 一些常用的小工具
+一些常用的小工具 🤝
 
 
 ## 說明
@@ -50,6 +50,7 @@ npm install @oawu/helper
 * `bool` ─ 檢查格式是否為 `boolean`，回傳值為 `true` 或 `false`
 * `object` ─ 檢查格式是否為 `object`，回傳值為 `true` 或 `false`
 * `str` ─ 檢查格式是否為 `string`，回傳值為 `true` 或 `false`
+* `num` ─ 檢查格式是否為 `number`，回傳值為 `true` 或 `false`
 * `arr` ─ 檢查格式是否為 `array`，回傳值為 `true` 或 `false`
 * `str.notEmpty` ─ 檢查格式是否為 `string` 並且長度大於 0，回傳值為 `true` 或 `false`
 * `arr.notEmpty` ─ 檢查格式是否為 `array` 並且數量大於 0，回傳值為 `true` 或 `false`
@@ -58,6 +59,7 @@ npm install @oawu/helper
 * `bool.or` ─ 功能與 `bool` 功能相同，當值 **非 `boolean`** 時，則回傳第二參數值
 * `object.or` ─ 功能與 `object` 功能相同，當值 **非 `object`** 時，則回傳第二參數值
 * `str.or` ─ 功能與 `str` 功能相同，當值 **非 `string`** 時，則回傳第二參數值
+* `num.or` ─ 功能與 `num` 功能相同，當值 **非 `number`** 時，則回傳第二參數值
 * `arr.or` ─ 功能與 `arr` 功能相同，當值 **非 `array`** 時，則回傳第二參數值
 * `str.notEmpty.or` ─ 功能與 `str.notEmpty` 功能相同，當值 **非 `string` 或長度為 0** 時，則回傳第二參數值
 * `arr.notEmpty.or` ─ 功能與 `arr.notEmpty` 功能相同，當值 **非 `array` 或數量為 0** 時，則回傳第二參數值
@@ -66,6 +68,7 @@ npm install @oawu/helper
 * `bool.do` ─ 第二參數為 closure，功能與 `bool` 功能相同，符合條件下即執行第二參數，並且回傳值為函式回傳值
 * `object.do` ─ 第二參數為 closure，功能與 `object` 功能相同，符合條件下即執行第二參數，並且回傳值為函式回傳值
 * `str.do` ─ 第二參數為 closure，功能與 `str` 功能相同，符合條件下即執行第二參數，並且回傳值為函式回傳值
+* `num.do` ─ 第二參數為 closure，功能與 `num` 功能相同，符合條件下即執行第二參數，並且回傳值為函式回傳值
 * `arr.do` ─ 第二參數為 closure，功能與 `arr` 功能相同，符合條件下即執行第二參數，並且回傳值為函式回傳值
 * `str.notEmpty.do` ─ 第二參數為 closure，功能與 `str.notEmpty` 功能相同，符合條件下即執行第二參數，並且回傳值為函式回傳值
 * `arr.notEmpty.do` ─ 第二參數為 closure，功能與 `arr.notEmpty` 功能相同，符合條件下即執行第二參數，並且回傳值為函式回傳值
@@ -74,6 +77,7 @@ npm install @oawu/helper
 * `bool.do.or` ─ 第二參數為 closure，功能與 `bool` 功能相同，符合條件下即執行第二參數，回傳值為函式回傳值，若不符合條件，則回傳值為第三參數值
 * `object.do.or` ─ 第二參數為 closure，功能與 `object` 功能相同，符合條件下即執行第二參數，回傳值為函式回傳值，若不符合條件，則回傳值為第三參數值
 * `str.do.or` ─ 第二參數為 closure，功能與 `str` 功能相同，符合條件下即執行第二參數，回傳值為函式回傳值，若不符合條件，則回傳值為第三參數值
+* `num.do.or` ─ 第二參數為 closure，功能與 `num` 功能相同，符合條件下即執行第二參數，回傳值為函式回傳值，若不符合條件，則回傳值為第三參數值
 * `arr.do.or` ─ 第二參數為 closure，功能與 `arr` 功能相同，符合條件下即執行第二參數，回傳值為函式回傳值，若不符合條件，則回傳值為第三參數值
 * `str.notEmpty.do.or` ─ 第二參數為 closure，功能與 `str.notEmpty` 功能相同，符合條件下即執行第二參數，回傳值為函式回傳值，若不符合條件，則回傳值為第三參數值
 * `arr.notEmpty.do.or` ─ 第二參數為 closure，功能與 `arr.notEmpty` 功能相同，符合條件下即執行第二參數，回傳值為函式回傳值，若不符合條件，則回傳值為第三參數值
