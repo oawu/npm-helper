@@ -12,7 +12,6 @@
 npm install @oawu/helper
 ```
 
-
 ## 使用
 
 引入 `require('@oawu/helper')` 即可使用，如下範例：
@@ -26,6 +25,9 @@ npm install @oawu/helper
   Helper.println(Typeof.str.or({}, '?'))
 
 ```
+
+
+## 說明
 
 目前可使用的功能如下：
 
