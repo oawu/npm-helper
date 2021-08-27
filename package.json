@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/comdan66/node-Helper#readme",
   "dependencies": {
-    "@oawu/cli-progress": "^1.0.10",
-    "@oawu/xterm": "^1.0.5"
+    "@oawu/cli-progress": "^1.0.14",
+    "@oawu/xterm": "^1.0.6"
   }
 }
