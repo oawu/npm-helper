@@ -1,6 +1,6 @@
 {
   "name": "@oawu/helper",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "🤝 一些常用的小工具",
   "main": "index.js",
   "scripts": {
@@ -8,21 +8,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/comdan66/node-Helper.git"
+    "url": "git+https://github.com/oawu/npm-helper.git"
   },
   "keywords": [],
   "author": {
     "name": "OA Wu",
-    "email": "comdan66@gmail.com",
+    "email": "oawu.tw@gmail.com",
     "url": "https://www.ioa.tw"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/comdan66/node-Helper/issues"
+    "url": "https://github.com/oawu/npm-helper/issues"
   },
-  "homepage": "https://github.com/comdan66/node-Helper#readme",
+  "homepage": "https://github.com/oawu/npm-helper#readme",
   "dependencies": {
-    "@oawu/cli-progress": "^1.0.14",
-    "@oawu/xterm": "^1.0.6"
+    "@oawu/cli-progress": "^1.0.15",
+    "@oawu/xterm": "^1.0.7"
   }
 }
