@@ -31,7 +31,7 @@ const Type = {
 
 const closureOrPromise = (closure, func, obj = undefined) => {
   if (Type.func(closure)) {
-    
+
     if (Type.asyncFunc(func)) {
       func().then(closure).catch(closure)
       return obj
@@ -57,7 +57,7 @@ const closureOrPromise = (closure, func, obj = undefined) => {
     } catch (error) {
       if (_tmp) { return }
       _tmp = true
-      closure(result)
+      closure(error)
     }
     return obj
   }
@@ -89,7 +89,7 @@ const closureOrPromise = (closure, func, obj = undefined) => {
     } catch (error) {
       if (_tmp) { return }
       _tmp = true
-      reject(result)
+      reject(error)
     }
   })
 }
@@ -182,7 +182,7 @@ const Json = {
 
 const Print = {
   cn: _    => process.stdout.write("\x1b[2J\x1b[0f"),
-  ln: (...strs) => process.stdout.write(`${strs.join('')}\n`) 
+  ln: (...strs) => process.stdout.write(`${strs.join('')}\n`)
 }
 
 const _argvDash = _ => { // -a b c --d ef
