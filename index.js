@@ -64,6 +64,39 @@ const closureOrPromise = (closure, func, obj = undefined) => {
 
   // =================
 
+  if (Type.asyncFunc(closure)) {
+    if (Type.asyncFunc(func)) {
+      func().then(closure).catch(closure)
+      return obj
+    }
+
+    if (Type.promise(func)) {
+      func.then(closure).catch(closure)
+      return obj
+    }
+
+    if (!Type.func(func)) {
+      closure(func)
+      return obj
+    }
+
+    let _tmp = false
+    try {
+      func(result => {
+        if (_tmp) { return }
+        _tmp = true
+        closure(result)
+      })
+    } catch (error) {
+      if (_tmp) { return }
+      _tmp = true
+      closure(error)
+    }
+    return obj
+  }
+
+  // =================
+
   if (Type.asyncFunc(func)) {
     return func()
   }
