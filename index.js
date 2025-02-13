@@ -1,119 +1,246 @@
 /**
- * @author      OA Wu <oawu.tw@gmail.com>
- * @copyright   Copyright (c) 2015 - 2022, @oawu/helper
+ * @author      OA Wu <comdan66@gmail.com>
+ * @copyright   Copyright (c) 2015 - 2025, @oawu/helper
  * @license     http://opensource.org/licenses/MIT  MIT License
  * @link        https://www.ioa.tw/
  */
 
-const Path = require('path')
-const FileSystem = require('fs')
+const _typeArr = v => Array.isArray(v)
+const _typeObj = v => typeof v == 'object' && v !== null && !_typeArr(v)
+const _typeStr = v => typeof v == 'string'
+const _typeNeStr = v => _typeStr(v) && v !== ''
+const _typeNum = v => typeof v == 'number' && v !== Infinity && !isNaN(v)
+const _typeBool = v => typeof v == 'boolean'
+const _typeFunc = v => typeof v == 'function' && v.constructor.name !== 'AsyncFunction'
+const _typeAsyncFunc = v => typeof v == 'function' && v.constructor.name === 'AsyncFunction'
+const _typePromise = v => _typeObj(v) && v instanceof Promise
+const _typeError = v => _typeObj(v) && v instanceof Error
 
-const Typeof = {
-  func: val => typeof val == 'function',
-  bool: val => typeof val == 'boolean',
-  object: val => typeof val == 'object',
-  str: val => typeof val == 'string',
-  num: val => typeof val == 'number',
-  arr: val => Typeof.object(val) && Array.isArray(val)
+const Type = {
+  obj: _typeObj,
+  str: _typeStr,
+  neStr: _typeNeStr,
+  num: _typeNum,
+  bool: _typeBool,
+  arr: _typeArr,
+  func: _typeFunc,
+  asyncFunc: _typeAsyncFunc,
+  promise: _typePromise,
+  error: _typeError,
 }
-Typeof.str.notEmpty = val => Typeof.str(val) && val !== ''
-Typeof.arr.notEmpty = val => Typeof.arr(val) && val.length
 
-Typeof.func.or = (val, d4) => Typeof.func(val) ? val : d4
-Typeof.bool.or = (val, d4) => Typeof.bool(val) ? val : d4
-Typeof.object.or = (val, d4) => Typeof.object(val) ? val : d4
-Typeof.str.or = (val, d4) => Typeof.str(val) ? val : d4
-Typeof.num.or = (val, d4) => Typeof.num(val) ? val : d4
-Typeof.arr.or = (val, d4) => Typeof.arr(val) ? val : d4
-Typeof.str.notEmpty.or = (val, d4) => Typeof.str.notEmpty(val) ? val : d4
-Typeof.arr.notEmpty.or = (val, d4) => Typeof.arr.notEmpty(val) ? val : d4
+const closureOrPromise = (closure, func, obj = undefined) => {
+  if (Type.func(closure)) {
+    
+    if (Type.asyncFunc(func)) {
+      func().then(closure).catch(closure)
+      return obj
+    }
 
-Typeof.func.do = (val, func) => Typeof.func(val) && Typeof.func(func) && func(val)
-Typeof.bool.do = (val, func) => Typeof.bool(val) && Typeof.func(func) && func(val)
-Typeof.object.do = (val, func) => Typeof.object(val) && Typeof.func(func) && func(val)
-Typeof.str.do = (val, func) => Typeof.str(val) && Typeof.func(func) && func(val)
-Typeof.num.do = (val, func) => Typeof.num(val) && Typeof.func(func) && func(val)
-Typeof.arr.do = (val, func) => Typeof.arr(val) && Typeof.func(func) && func(val)
-Typeof.str.notEmpty.do = (val, func) => Typeof.str.notEmpty(val) && Typeof.func(func) && func(val)
-Typeof.arr.notEmpty.do = (val, func) => Typeof.arr.notEmpty(val) && Typeof.func(func) && func(val)
+    if (Type.promise(func)) {
+      func.then(closure).catch(closure)
+      return obj
+    }
 
-Typeof.func.do.or = (val, func, d4) => Typeof.func(val = Typeof.func.do(val, func)) ? val : d4
-Typeof.bool.do.or = (val, func, d4) => Typeof.bool(val = Typeof.bool.do(val, func)) ? val : d4
-Typeof.object.do.or = (val, func, d4) => Typeof.object(val = Typeof.object.do(val, func)) ? val : d4
-Typeof.str.do.or = (val, func, d4) => Typeof.str(val = Typeof.str.do(val, func)) ? val : d4
-Typeof.num.do.or = (val, func, d4) => Typeof.num(val = Typeof.num.do(val, func)) ? val : d4
-Typeof.arr.do.or = (val, func, d4) => Typeof.arr(val = Typeof.arr.do(val, func)) ? val : d4
-Typeof.str.notEmpty.do.or = (val, func, d4) => Typeof.str.notEmpty(val = Typeof.str.notEmpty.do(val, func)) ? val : d4
-Typeof.arr.notEmpty.do.or = (val, func, d4) => Typeof.arr.notEmpty(val = Typeof.arr.notEmpty.do(val, func)) ? val : d4
+    if (!Type.func(func)) {
+      closure(func)
+      return obj
+    }
 
-const Helper = {
-  clean: _ => process.stdout.write("\x1b[2J\x1b[0f"),
-
-  println: text => process.stdout.write('' + text + "\n"),
-
-  scanDir (dir, recursive = true) {
+    let _tmp = false
     try {
-      return Helper.exists(dir)
-        ? FileSystem.readdirSync(dir).map(file => !['.', '..'].includes(file) ? recursive && Helper.access(dir + file) && Helper.isDirectory(dir + file) ? Helper.scanDir(dir + file + Path.sep, recursive) : [dir + file] : null).filter(t => t !== null).reduce((a, b) => a.concat(b), [])
-        : [] }
-    catch (_) { return [] }
-  },
-
-  exists: dir => {
-    try { return FileSystem.existsSync(dir) }
-    catch (e) { return false }
-  },
-
-  mkdir: (dir, recursive = false) => {
-    try { return FileSystem.mkdirSync(dir, { recursive }), true }
-    catch (e) { return false }
-  },
-
-  access (path, permission = FileSystem.constants.R_OK) {
-    try { return FileSystem.accessSync(path, permission), true }
-    catch (error) { return false }
-  },
-
-  isDirectory: path => !!FileSystem.statSync(path).isDirectory(),
-
-  isFile: path => !!FileSystem.statSync(path).isFile(),
-
-  isSub: (sub, main) => {
-    return sub = sub.split('').map(s => s.charCodeAt(0)), main = main.split('').map(s => s.charCodeAt(0)).slice(0, sub.length), main !== false && sub.join('') === main.join('')
-  },
-
-  verifyDirs (base, dirs) {
-    for (let dir of dirs.reduce((a, b) => { const last = a.pop(); return last === undefined ? [[b]] : [...a, last, last.concat(b)] }, []).map(dirs => dirs.length ? dirs.join(Path.sep) + Path.sep : ''))
-      if (!(Helper.access(base + dir) && Helper.isDirectory(base + dir)))
-        if (Helper.mkdir(base + dir), !(Helper.access(base + dir) && Helper.isDirectory(base + dir)))
-          return false
-    return true
-  },
-
-  argv: (keys, d4) => {
-    keys = Typeof.str.do.or(keys, str => [str], keys)
-    const argvs = process.argv.slice(2)
-    for(let i = 0; i < argvs.length; i++)
-      if (keys.indexOf(argvs[i]) !== -1)
-        if (typeof argvs[i + 1] !== 'undefined' && argvs[i + 1][0] != '-')
-          return argvs[i + 1]
-    return d4
-  },
-  during: startAt => {
-    const units = [], contitions = [{ base: 60, format: '秒' }, { base: 60, format: '分鐘' }, { base: 24, format: '小時' }, { base: 30, format: '天' }, { base: 12, format: '個月' }]
-    let now = parseInt((Date.now() - startAt) / 1000, 10), nowUnit = null
-
-    if (now === 0)
-      return '太快了…'
-
-    for (var i in contitions)
-      if (nowUnit = now % contitions[i].base, nowUnit == 0 || units.push(nowUnit + contitions[i].format), now = Math.floor(now / contitions[i].base), now < 1)
-        break
-
-    return now > 0 && units.push(now + ' 年'), units.length < 1 && units.push(now + ' 秒'), units.reverse().join(' ')
+      func(result => {
+        if (_tmp) { return }
+        _tmp = true
+        closure(result)
+      })
+    } catch (error) {
+      if (_tmp) { return }
+      _tmp = true
+      closure(result)
+    }
+    return obj
   }
+
+  // =================
+
+  if (Type.asyncFunc(func)) {
+    return func()
+  }
+
+  if (Type.promise(func)) {
+    return func
+  }
+
+  return new Promise((resolve, reject) => {
+    if (!Type.func(func)) {
+      return func instanceof Error
+        ? reject(func)
+        : resolve(func)
+    }
+
+    let _tmp = false
+    try {
+      func(result => {
+        if (_tmp) { return }
+        _tmp = true
+        result instanceof Error ? reject(result) : resolve(result)
+      })
+    } catch (error) {
+      if (_tmp) { return }
+      _tmp = true
+      reject(result)
+    }
+  })
 }
+
+const tryIgnore = async (func, ifCatchVal = undefined) => {
+  if (Type.asyncFunc(func)) {
+    let result = null
+    try {
+      result = await func()
+    } catch (error) {
+      result = ifCatchVal
+      if (ifCatchVal === undefined) {
+        result = error
+      }
+      if (Type.func(ifCatchVal)) {
+        result = ifCatchVal(error)
+      }
+      if (Type.asyncFunc(ifCatchVal)) {
+        result = await ifCatchVal(error)
+      }
+    }
+    return result
+  }
+
+  if (Type.promise(func)) {
+    let result = null
+    try {
+      result = await func
+    } catch (error) {
+      result = ifCatchVal
+      if (ifCatchVal === undefined) {
+        result = error
+      }
+      if (Type.func(ifCatchVal)) {
+        result = ifCatchVal(error)
+      }
+      if (Type.asyncFunc(ifCatchVal)) {
+        result = await ifCatchVal(error)
+      }
+    }
+    return result
+  }
+
+  if (Type.func(func)) {
+    let result = null
+    try {
+      result = func()
+    } catch (error) {
+      result = ifCatchVal
+      if (ifCatchVal === undefined) {
+        result = error
+      }
+      if (Type.func(ifCatchVal)) {
+        result = ifCatchVal(error)
+      }
+      if (Type.asyncFunc(ifCatchVal)) {
+        result = await ifCatchVal(error)
+      }
+    }
+    return result
+  }
+
+  return func
+}
+
+const Json = {
+  decode: text => {
+    let json = null
+
+    try {
+      json = JSON.parse(text)
+    } catch (error) {
+      json = error
+    }
+
+    return json
+  },
+  encode: (json, space = 0) => {
+    let text = null
+
+    try {
+      text = JSON.stringify(json, null, space)
+    } catch (error) {
+      text = error
+    }
+
+    return text
+  },
+}
+
+const Print = {
+  cn: _    => process.stdout.write("\x1b[2J\x1b[0f"),
+  ln: (...strs) => process.stdout.write(`${strs.join('')}\n`) 
+}
+
+const _argvDash = _ => { // -a b c --d ef
+  const argvs = process.argv.slice(2)
+  const cmds = {}
+
+  let key = '';
+  for (let argv of argvs) {
+    if (argv[0] == '-') {
+      key = argv
+      if (!Type.arr(cmds[key])) {
+        cmds[key] = []
+      }
+    } else {
+      if (!Type.arr(cmds[key])) {
+        cmds[key] = []
+      }
+      cmds[key].push(argv)
+    }
+  }
+
+  return cmds
+}
+const argvQuery = keys => { // a=b-c=d e=123
+  const argvs = process.argv.slice(2)
+  const cmds = {}
+
+  for (let argv of argvs) {
+    const index = argv.indexOf('=')
+    if (index == -1) {
+      cmds[argv] = ''
+    } else {
+      const key = argv.substring(0, index)
+      const value = argv.substring(index + 1)
+      cmds[key] = value
+    }
+  }
+
+  return cmds
+}
+
+const Argv = {
+  dash: _argvDash,
+  query: argvQuery,
+}
+
+const Str = {
+  pad: (t, l = 2, s = '0', r = false) => r ? String(t).padEnd(l, s) : String(t).padStart(l, s),
+}
+const date = (format = 'Y-m-d H:i:s', now = new Date()) => format.replace('Y', now.getFullYear()).replace('m', Str.pad(now.getMonth() + 1)).replace('d', Str.pad(now.getDate())).replace('H', Str.pad(now.getHours())).replace('i', Str.pad(now.getMinutes())).replace('s', Str.pad(now.getSeconds()))
 
 module.exports = {
-  Typeof, ...Helper
+  Argv,
+  Print,
+  closureOrPromise,
+  tryIgnore,
+  Json,
+  Type,
+  date,
+  Str,
 }
