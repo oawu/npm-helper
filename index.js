@@ -267,6 +267,34 @@ const Str = {
 }
 const date = (format = 'Y-m-d H:i:s', now = new Date()) => format.replace('Y', now.getFullYear()).replace('m', Str.pad(now.getMonth() + 1)).replace('d', Str.pad(now.getDate())).replace('H', Str.pad(now.getHours())).replace('i', Str.pad(now.getMinutes())).replace('s', Str.pad(now.getSeconds()))
 
+const Sigint = {
+  _funcs: [],
+  execute (closure = null) {
+    return closureOrPromise(closure, async _ => {
+      for (const task of this._funcs) {
+        if (Type.func(task)) {
+          try { task() }
+          catch (_) { }
+        }
+        if (Type.asyncFunc(task)) {
+          try { await task() }
+          catch (_) { }
+        }
+        if (Type.promise(task)) {
+          try { await task }
+          catch (_) { }
+        }
+      }
+
+      process.exit(1)
+    })
+  },
+  push (...func) {
+    this._funcs.push(...func)
+    return this
+  },
+}
+
 module.exports = {
   Argv,
   Print,
@@ -276,4 +304,5 @@ module.exports = {
   Type,
   date,
   Str,
+  Sigint,
 }
