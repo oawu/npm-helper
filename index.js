@@ -269,7 +269,7 @@ const date = (format = 'Y-m-d H:i:s', now = new Date()) => format.replace('Y', n
 
 const Sigint = {
   _funcs: [],
-  execute (closure = null) {
+  execute (done = null, closure = null) {
     return closureOrPromise(closure, async _ => {
       for (const task of this._funcs) {
         if (Type.func(task)) {
@@ -284,6 +284,19 @@ const Sigint = {
           try { await task }
           catch (_) { }
         }
+      }
+
+      if (Type.func(done)) {
+        try { done() }
+        catch (_) { }
+      }
+      if (Type.asyncFunc(done)) {
+        try { await done() }
+        catch (_) { }
+      }
+      if (Type.promise(done)) {
+        try { await done }
+        catch (_) { }
       }
 
       process.exit(1)
