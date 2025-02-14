@@ -239,7 +239,7 @@ const _argvDash = _ => { // -a b c --d ef
 
   return cmds
 }
-const argvQuery = keys => { // a=b-c=d e=123
+const _argvQuery = keys => { // a=b-c=d e=123
   const argvs = process.argv.slice(2)
   const cmds = {}
 
@@ -259,7 +259,7 @@ const argvQuery = keys => { // a=b-c=d e=123
 
 const Argv = {
   dash: _argvDash,
-  query: argvQuery,
+  query: _argvQuery,
 }
 
 const Str = {
