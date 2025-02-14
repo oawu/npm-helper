@@ -26,7 +26,7 @@ const Type = {
   func: _typeFunc,
   asyncFunc: _typeAsyncFunc,
   promise: _typePromise,
-  error: _typeError,
+  err: _typeError,
 }
 
 const closureOrPromise = (closure, func, obj = undefined) => {
