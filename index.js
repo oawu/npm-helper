@@ -214,7 +214,7 @@ const Json = {
 }
 
 const Print = {
-  cn: _    => process.stdout.write("\x1b[2J\x1b[0f"),
+  cn: _ => process.stdout.write("\x1b[2J\x1b[0f"),
   ln: (...strs) => process.stdout.write(`${strs.join('')}\n`)
 }
 
@@ -245,9 +245,7 @@ const _argvQuery = keys => { // a=b-c=d e=123
 
   for (let argv of argvs) {
     const index = argv.indexOf('=')
-    if (index == -1) {
-      cmds[argv] = ''
-    } else {
+    if (index != -1) {
       const key = argv.substring(0, index)
       const value = argv.substring(index + 1)
       cmds[key] = value
@@ -269,7 +267,7 @@ const date = (format = 'Y-m-d H:i:s', now = new Date()) => format.replace('Y', n
 
 const Sigint = {
   _funcs: [],
-  execute (done = null, closure = null) {
+  execute(done = null, closure = null) {
     return closureOrPromise(closure, async _ => {
       for (const task of this._funcs) {
         if (Type.func(task)) {
@@ -302,7 +300,7 @@ const Sigint = {
       process.exit(1)
     })
   },
-  push (...func) {
+  push(...func) {
     this._funcs.push(...func)
     return this
   },
