@@ -5,6 +5,8 @@
  * @link        https://www.ioa.tw/
  */
 
+const Type = require('./Type.js')
+
 const Argv = {
   dash: _ => { // -a b c --d ef
     const argvs = process.argv.slice(2)
