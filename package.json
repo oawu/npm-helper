@@ -1,6 +1,6 @@
 {
   "name": "@oawu/helper",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "🤝 一些常用的小工具",
   "main": "index.js",
   "scripts": {
